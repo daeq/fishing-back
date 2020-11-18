@@ -19,7 +19,8 @@ const { jwtMiddleware } = require('lib/token');
 mongoose.Promise = global.Promise; // Node 의 네이티브 Promise 사용
 mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.MONGO_URI1,  
-{useNewUrlParser: true, useUnifiedTopology: true})
+{useNewUrlParser: true, useUnifiedTopology: true,
+    retryWrites: false})
 .then(response => {
     console.log('mongodb 접속 성공적~');
   })

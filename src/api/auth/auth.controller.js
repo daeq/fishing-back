@@ -19,7 +19,7 @@ exports.localRegister = async ctx => {
       .min(6)
   });
 
-  const result = Joi.validate(ctx.request.body, schema);
+  const result = schema.validate(ctx.request.body);
 
   if (result.error) {
     ctx.status = 400;
@@ -76,7 +76,7 @@ exports.localLogin = async ctx => {
     password: Joi.string().required()
   });
 
-  const result = Joi.validate(ctx.request.body, schema);
+  const result = schema.validate(ctx.request.body);
 
   if (result.error) {
     ctx.status = 400; // Bad Request
