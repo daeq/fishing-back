@@ -82,7 +82,7 @@ exports.localLogin = async ctx => {
     ctx.status = 400; // Bad Request
     return;
   }
-
+  
   const { email, password } = ctx.request.body;
   let account = null;
   try {
@@ -91,7 +91,7 @@ exports.localLogin = async ctx => {
   } catch (e) {
     ctx.throw(500, e);
   }
-
+  
   if (!account || !account.validatePassword(password)) {
     // 유저가 존재하지 않거나 || 비밀번호가 일치하지 않으면
     ctx.status = 403; // Forbidden
@@ -108,7 +108,7 @@ exports.localLogin = async ctx => {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7
   });
-  ctx.body = { ...account.profile, email: account.email };
+  ctx.body = { username: account.profile.username,thumbnail:account.profile.thumbnail,accountClassificationId:account.profile.accountClassificationId, email: account.email };
 };
 
 // 이메일 / 아이디 존재유무 확인
@@ -168,3 +168,18 @@ exports.changeAccountClassification = async ctx => {
 
   ctx.body = accountClassification;
 };
+// 회원 분류 변경 요청
+exports.request = async ctx =>{
+  const { userInfoId, accountClassification } = ctx.request.body;
+
+  const account = await Account.findOneAndUpdate(
+    { _id: userInfoId },
+    {
+      $set: { 'accountClassificationRequest': accountClassification }
+    },
+    { upsert: true }
+  );
+  ctx.body = {
+    result: account !== null
+  }
+}

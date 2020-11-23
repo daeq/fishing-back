@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Account = require('models/account/account');
 const AccountClassification = require('models/account/accountClassification');
 
 // 회원 분류 관리 추가
@@ -18,6 +19,7 @@ exports.add = async ctx => {
 exports.list = async ctx => {
   ctx.body = await AccountClassification.find();
 };
+
 exports.changeUserClassification = async ctx => {
   const { userName, name } = ctx.request.body;
   const { user } = ctx.request;
