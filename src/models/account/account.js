@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const crypto = require('crypto');
 const { generateToken } = require('lib/token');
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 function hash(password) {
   return crypto
