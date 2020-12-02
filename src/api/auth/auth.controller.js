@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const Account = require('models/account/account');
 const AccountClassification = require('models/account/accountClassification');
+const crypto = require('crypto');
 
 // 로컬 회원가입
 exports.localRegister = async ctx => {
@@ -168,10 +169,10 @@ exports.changeAccountClassification = async ctx => {
 
   ctx.body = accountClassification;
 };
-// 회원 분류 변경 요청
+// 회원 분류 변경
 exports.request = async ctx =>{
   const { userInfoId, accountClassification } = ctx.request.body;
-
+  
   const account = await Account.findOneAndUpdate(
     { _id: userInfoId },
     {
@@ -183,3 +184,75 @@ exports.request = async ctx =>{
     result: account !== null
   }
 }
+
+function hash(password) {
+  return crypto
+    .createHmac('sha256', process.env.SECRET_KEY)
+    .update(password)
+    .digest('hex');
+}
+
+// 프로필 이미지 변경
+exports.thumbnailChange = async ctx => {
+ const { thumbnailChangeBase64 } = ctx.request.body;
+  const { user } = ctx.request;
+ let response = 1;
+ // 성공 시
+
+  // 로그인 체크
+  if (!user) {
+    console.log('유저 없음');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+
+ ctx.body = {result : response, message:'성공'}
+}
+// 비밀번호 변경
+exports.passwordChange = async ctx => {
+ const schema = Joi.object().keys({
+    password: Joi.string()
+      .required()
+      .min(6)
+  });
+  
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    return;
+  }
+ let response = 1;
+ // 성공 시
+ let user = {profile:'daeq'}
+  // 로그인 체크
+  if (!user) {
+    console.log('유저 없음');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+  let accout;
+  try {
+      account = await Account.findOneAndUpdate(
+          {'profile.username':user.profile},
+            {password: hash(ctx.request.body.password)}, 
+            {new: true}
+      );
+  } catch (error) {
+      console.log(error);
+  }
+
+  let token = null;
+  try {
+    token = await account.generateToken();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.cookies.set('access_token', token, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  });
+  
+ ctx.body = {result : response, message:'성공'}
+}
+

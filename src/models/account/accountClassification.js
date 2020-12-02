@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const accountClassificationSchema = new Schema({
   name: String,
   information: String
-});
+}, { versionKey: false });
 
 accountClassificationSchema.statics.add = function({ name, information }) {
   const accountClassification = new this({

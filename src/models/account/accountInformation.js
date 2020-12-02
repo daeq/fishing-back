@@ -30,7 +30,7 @@ let AccountInformation = new Schema({
       new Date().getTime() - new Date().getTimezoneOffset() * 60000
     )
   }
-});
+}, { versionKey: false });
 
 if (mongoose.models.AccountInformation) {
   module.exports = mongoose.model('AccountInformation');

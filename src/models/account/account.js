@@ -32,13 +32,11 @@ let Account = new Schema({
       accessToken: String
     }
   },
-  accountClassificationId: ObjectId,
-  accountClassification: String,
   accountClassificationRequest : String,
   password: String, // 로컬계정의 경우엔 비밀번호를 해싱해서 저장합니다
   thoughtCount: { type: Number, default: 0 }, // 서비스에서 포스트를 작성 할 때마다 1씩 올라갑니다
   createdAt: { type: Date, default: Date.now }
-});
+}, { versionKey: false });
 
 Account.statics.findByUsername = function(username) {
   // 객체에 내장되어있는 값을 사용 할 때는 객체명.키 이런식으로 쿼리하면 됩니다
