@@ -32,7 +32,7 @@ auth.get('/getPartnerInfo', infoCtrl.getPartnerInfo);
 // 사업자 정보 리스트 불러오기
 auth.get('/getPartnerInfoList', infoCtrl.getPartnerInfoList);
 
-// 회원 권한 변경 된 리스트 불러오기
+// 회원 권한 변경 요청된 리스트 불러오기
 auth.get('/getRequestedList', infoCtrl.getRequestedList);
 // 회원 권한 변경
 auth.post('/setClassification', infoCtrl.setClassification)

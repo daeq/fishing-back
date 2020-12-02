@@ -140,12 +140,23 @@ exports.getRequestedList = async ctx =>{
     // let classify = await AccountClassification.findOne({name:'gkgk'});
 
     // 변경 중인 
-    test = await Account.find({accountClassificationRequest:'사업자 변경'},{
+    test = await Account.aggregate([{ $match: { accountClassificationRequest:'사업자 변경' } },
+    {
+      $lookup: {
+        from: 'infoofpartners',
+        localField: '_id',
+        foreignField: 'userId',
+        as: 'info'
+      }
+    },{
+      $project:{
+        info:1,
       profile:1,
       accountClassificationRequest:1,
       accountClassificationAnswer:1
-    })
-    console.log(test);
+
+      }
+    }]);
   } catch (error) {
     console.log(error);
   }
