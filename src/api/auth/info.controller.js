@@ -142,7 +142,8 @@ exports.getRequestedList = async ctx =>{
     // 변경 중인 
     test = await Account.find({accountClassificationRequest:'사업자 변경'},{
       profile:1,
-      accountClassificationRequest:1
+      accountClassificationRequest:1,
+      accountClassificationAnswer:1
     })
     console.log(test);
   } catch (error) {
@@ -151,18 +152,52 @@ exports.getRequestedList = async ctx =>{
   ctx.body=test
 }
 
+// 회원 권한 변경
 exports.setClassification = async ctx =>{
-  const { username, classificationName } = ctx.request.body;
+  const { username, choice } = ctx.request.body;
+  const schema = Joi.object().keys({
+    username:Joi.string().required(),
+    choice:Joi.number().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    return;
+  }
   let account;
   let response = {
     result:1,
     message:'성공'
   };
   try {
+    let classificationName;
+    let request;
+    let answer;
+    if(choice===1){
+      // 승인
+      classificationName='파트너';
+      request=''
+      answer='파트너 승인'
+    }else if(choice===2){
+      // 보류
+      classificationName='일반'
+      request='사업자 변경'
+      answer='파트너 승인 보류'
+    }else if(choice===3){
+      // 거절
+      classificationName='일반'
+      request='사업자 변경'
+      answer='파트너 승인 거절'
+    }
+    
     const classification =await AccountClassification.findOne({name:classificationName})
     account = await Account.findOneAndUpdate(
       {'profile.username':username},
-      {'profile.accountClassificationId':classification._id},
+      {
+        'profile.accountClassificationId':classification._id,
+        'accountClassificationRequest':request,
+        'accountClassificationAnswer':answer
+      },
       {
         upsert:true,
         new: true
