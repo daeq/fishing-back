@@ -12,6 +12,7 @@ auth.get('/check', authCtrl.check);
 auth.post('/accountClassification/add', accountClassificationCtrl.add);
 auth.get('/accountClassification', accountClassificationCtrl.list);
 auth.post('/changeAccountClassification', authCtrl.changeAccountClassification);
+
 // 회원 권한 요청
 auth.post('/accountClassification/request', authCtrl.request);
 auth.post('/setIsAdmin', accountClassificationCtrl.setIsAdmin);
