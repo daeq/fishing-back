@@ -33,7 +33,7 @@ exports.changeUserClassification = async ctx => {
 };
 exports.setIsAdmin = async ctx => {
   const { user } = ctx.request;
-
+  console.log(user);
   if (!user) {
     ctx.status = 403; // Forbidden
     return;
@@ -41,7 +41,7 @@ exports.setIsAdmin = async ctx => {
     const one = await AccountClassification.findOne({
       _id: user.profile.accountClassificationId
     });
-
+    console.log(one);
     ctx.body = one ? true : false;
   }
 };
