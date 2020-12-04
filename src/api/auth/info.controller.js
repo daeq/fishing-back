@@ -18,12 +18,14 @@ function hash(password) {
 
 // 사업자 정보 변경 및 파트너 신청
 exports.setPartnerInfo = async ctx => {
-  const user = {profile:{username:'daeq'}};
-  // if (!user) {
-  //   console.log('유저 없음');
-  //   ctx.status = 403; // Forbidden
-  //   return;
-  // }
+  // 개발서버용 user 변수 이용.
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
   const schema = Joi.object().keys({
     code:Joi.string().required(),
     name:Joi.string().required(),
