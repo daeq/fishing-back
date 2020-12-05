@@ -264,6 +264,7 @@ exports.setShipInfo = async ctx =>{
   };
   let filter ;
   if(ctx.request.body._id){
+    console.log('파트너 정보 수정');
     filter={
           _id:ObjectId(ctx.request.body._id)
     }
