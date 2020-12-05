@@ -8,6 +8,13 @@ Joi.objectId = require('joi-objectid')(Joi)
 const {
   Types: { ObjectId }
 } = require('mongoose');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: process.env.accessKeyId,
+  secretAccessKey: process.env.secretAccessKey,
+  region: 'ap-northeast-2',
+  apiVersion: '2006-03-01' 
+});
 
 function hash(password) {
   return crypto

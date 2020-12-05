@@ -42,6 +42,6 @@ auth.post('/setShipInfo', infoCtrl.setShipInfo);
 // 선박 정보 리스트
 auth.get('/getShipInfoList', infoCtrl.getShipInfoList);
 // 선박 정보 비활성화
-auth.get('/deleteShipInfo', infoCtrl.deleteShipInfo);
+auth.post('/deleteShipInfo', infoCtrl.deleteShipInfo);
 
 module.exports = auth;
