@@ -276,7 +276,7 @@ exports.setShipInfo = async ctx =>{
         zip:ctx.request.body.zip,
         portAddress:ctx.request.body.portAddress,
         kakaoMap:ctx.request.body.kakaoMap,
-        iseUse:true
+        isUse:true
       },
       {
         upsert:true,
