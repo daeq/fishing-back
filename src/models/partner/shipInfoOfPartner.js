@@ -17,8 +17,12 @@ let shipInfoOfPartnerSchema = new Schema({
     numOfMaxGuests:Number,
     // 출발항구주소
     portAddress: String,
+    //우편번호
+    zip:String,
     // 위치 (변경 필요)
     kakaoMap:String,
+    // 사용 여부
+    isUse : {type:Boolean, default:true}
 }, { versionKey: false });
 
 

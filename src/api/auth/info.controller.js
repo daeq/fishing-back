@@ -241,6 +241,7 @@ exports.setShipInfo = async ctx =>{
     portName:Joi.string().required(),
     numOfMaxGuests:Joi.number().required(),
     portAddress:Joi.string().required(),
+    zip:Joi.string().required(),
     kakaoMap:Joi.string().required(),
   });
   const result = schema.validate(ctx.request.body);
@@ -272,6 +273,7 @@ exports.setShipInfo = async ctx =>{
         name:ctx.request.body.name,
         portName:ctx.request.body.portName,
         numOfMaxGuests:ctx.request.body.numOfMaxGuests,
+        zip:ctx.request.body.zip,
         portAddress:ctx.request.body.portAddress,
         kakaoMap:ctx.request.body.kakaoMap
       },
@@ -279,7 +281,7 @@ exports.setShipInfo = async ctx =>{
         upsert:true,
         new: true
       }
-    )    
+    )
   } catch (error) {
     console.log(error);
     ctx.status = 400;
@@ -315,7 +317,7 @@ exports.getShipInfoList = async ctx =>{
       console.log('유저 접속');
       filter={ 'userId': account._id}
     }
-    shipInfoList = await ShipInfoOfPartner.find(filter)
+    shipInfoList = await ShipInfoOfPartner.find({$and:[filter,{isUse:true}]},{isUse:0})
   } catch (error) {
     console.log(error);
     ctx.status = 400;
@@ -323,7 +325,41 @@ exports.getShipInfoList = async ctx =>{
       result:2,
       message:'실패'
     };
-    
   }
   ctx.body=shipInfoList
+}
+exports.deleteShipInfo = async ctx =>{
+  const { user } = ctx.request;
+  // const user = {profile:{username:'hktest'}};
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+let account;
+  let shipInfo;
+  let response = {
+    result:1,
+    message:'성공'
+  };
+  try {
+    account = await Account.findOne({'profile.username':user.profile.username});
+    shipInfo = await ShipInfoOfPartner.findOneAndUpdate(
+      {'$and':[{'userId':account._id}&&{'_id':ObjectId(ctx.request.body._id)}]},
+      {
+        isUse:false
+      },
+      {
+        upsert:true
+      }
+    )
+  } catch (error) {
+    console.log(error);
+    ctx.status = 400;
+    response = {
+      result:2,
+      message:'실패'
+    };    
+  }
+  ctx.body = response;
 }
