@@ -22,7 +22,7 @@ let shipInfoOfPartnerSchema = new Schema({
     // 위치 (변경 필요)
     kakaoMap:String,
     // 사용 여부
-    isUse : {type:Boolean, defaudefaultlt:true}
+    isUse : {type:Boolean, default:true}
 }, { versionKey: false });
 
 
