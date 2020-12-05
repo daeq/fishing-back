@@ -13,6 +13,8 @@ let shipInfoOfPartnerSchema = new Schema({
     name: String,
     // 출발항구명
     portName: String,
+    // 최대 손님수
+    numOfMaxGuests:Number,
     // 출발항구주소
     portAddress: String,
     // 위치 (변경 필요)

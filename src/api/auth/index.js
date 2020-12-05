@@ -39,7 +39,7 @@ auth.post('/setClassification', infoCtrl.setClassification)
 
 // 선박 정보 등록
 auth.post('/setShipInfo', infoCtrl.setShipInfo);
-// 선박 정보 리스트 
+// 선박 정보 리스트
 auth.get('/getShipInfoList', infoCtrl.getShipInfoList);
 
 module.exports = auth;

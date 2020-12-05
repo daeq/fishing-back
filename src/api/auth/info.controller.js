@@ -118,7 +118,6 @@ exports.getPartnerInfoList = async ctx =>{
   let infoOfPartner;
   try {
     let test = await AccountClassification.findOne({name:'관리자'})
-    console.log(test);
     infoOfPartner = await InfoOfPartner.find({
     })
   } catch (error) {
@@ -162,7 +161,7 @@ exports.getRequestedList = async ctx =>{
   } catch (error) {
     console.log(error);
   }
-  ctx.body=test
+  ctx.body=test;
 }
 
 // 회원 권한 변경
@@ -240,6 +239,7 @@ exports.setShipInfo = async ctx =>{
     imageLink:Joi.string().required(),
     name:Joi.string().required(),
     portName:Joi.string().required(),
+    numOfMaxGuests:Joi.number().required(),
     portAddress:Joi.string().required(),
     kakaoMap:Joi.string().required(),
   });
@@ -271,6 +271,7 @@ exports.setShipInfo = async ctx =>{
         imageLink:ctx.request.body.imageLink,
         name:ctx.request.body.name,
         portName:ctx.request.body.portName,
+        numOfMaxGuests:ctx.request.body.numOfMaxGuests,
         portAddress:ctx.request.body.portAddress,
         kakaoMap:ctx.request.body.kakaoMap
       },
