@@ -2,7 +2,7 @@ const { string } = require('joi');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 let shipInfoOfPartnerSchema = new Schema({
     // 유저 아이디
