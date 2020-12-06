@@ -17,6 +17,16 @@ exports.setProductType = async ctx => {
     productInformation:Joi.string().required(),
     refund:Joi.string().required(),
     requirements:Joi.string().required(),
+    // 미팅장소 명칭
+    meetingPlaceName: Joi.string().required(),
+    // 미팅장소 주소
+    meetingPlaceAddress1: Joi.string().required(),
+    // 미팅장소 우편번호
+    zip: Joi.string().required(),
+    // 미팅장소 lat
+    meetingPlaceLat: Joi.string().required(),
+    // 미팅장소 lng
+    meetingPlaceLng: Joi.string().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -50,7 +60,12 @@ exports.setProductType = async ctx => {
         totalSeats:ctx.request.body.totalSeats,
         productInformation:ctx.request.body.productInformation,
         refund:ctx.request.body.refund,
-        requirements:ctx.request.body.requirements
+        requirements:ctx.request.body.requirements,
+        meetingPlaceName:ctx.request.body.meetingPlaceName,
+        meetingPlaceAddress1:ctx.request.body.meetingPlaceAddress1,
+        zip:ctx.request.body.zip,
+        meetingPlaceLat:ctx.request.body.meetingPlaceLat,
+        meetingPlaceLng:ctx.request.body.meetingPlaceLng
       },
       {
         upsert:true,

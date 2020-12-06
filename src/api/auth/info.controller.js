@@ -264,14 +264,42 @@ exports.setShipInfo = async ctx =>{
   };
   let filter ;
   if(ctx.request.body._id){
+    console.log('파트너 정보 수정');
     filter={
           _id:ObjectId(ctx.request.body._id)
     }
   }else{
     filter={ 'name':'new 선박' }
   }
+
+  
   try {
     account = await Account.findOne({'profile.username':user.profile.username});
+    const base64Data = new Buffer.from(ctx.request.body.imageLink.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+    const type = ctx.request.body.imageLink.split(';')[0].split('/')[1];
+    const params = {
+      Bucket: S3_BUCKET,
+      Key: `${Date.now()}_${account._id}.${type}`, // type is not required
+      Body: base64Data,
+      ACL: 'public-read',
+      ContentEncoding: 'base64', // required
+      ContentType: `image/${type}` // required. Notice the back ticks
+    }
+    // The upload() is used instead of putObject() as we'd need the location url and assign that to our user profile/database
+    // see: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property
+    let location = '';
+    let key = '';
+    try {
+      const { Location, Key } = await s3.upload(params).promise();
+      location = Location;
+      key = Key;
+    } catch (error) {
+      // console.log(error)
+    }
+    
+    // Save the Location (url) to your database and Key if needs be.
+    // As good developers, we should return the url and let other function do the saving to database etc
+    console.log(location, key);
     shipInfo = await ShipInfoOfPartner.findOneAndUpdate(
       {'$and':[{'userId':account._id}&&filter]},
       {
