@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const ObjectId = mongoose.Types.ObjectId;
 
-let productSchema = new Schema({
+let priceJogunSchema = new Schema({
     // 유저 id
     userId:ObjectId,
     // 선박 id
@@ -11,15 +11,17 @@ let productSchema = new Schema({
     // 상품종류 id
     productTypeId:ObjectId,
     // 출발요일
-    day:String,
+    week:String,
     // 출발일
-    date: String,
-    // 출항시간
-    departureTime: String,
-    // 입항시간
-    arrivalTime: String,
-    // 상품정보
-    productInformation: String,
+    startDate: String,
+    // 종료일
+    endDate: String,
+    // 비고
+    message:String,
+    // 대소공통 여부
+    isTotalPrice:Boolean,
+    // 연산자
+    operator:String,
     // 성인 상품가
     priceAdult:Number,
     // 유아 상품가
@@ -29,8 +31,8 @@ let productSchema = new Schema({
 }, { versionKey: false });
 
 
-if (mongoose.models.Product) {
-  module.exports = mongoose.model('Product');
+if (mongoose.models.PriceJogun) {
+  module.exports = mongoose.model('PriceJogun');
 } else {
-  module.exports = mongoose.model('Product', productSchema);
+  module.exports = mongoose.model('PriceJogun', priceJogunSchema);
 }
