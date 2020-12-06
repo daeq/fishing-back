@@ -143,8 +143,8 @@ exports.setProduct = async ctx => {
     departureTime: Joi.string().required(),
     productInformation: Joi.string().required(),
     priceAdult:Joi.number().required(),
-    childAdult:Joi.number().required(),
-    infantAdult:Joi.number().required(),
+    priceChild:Joi.number().required(),
+    priceInfant:Joi.number().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -179,8 +179,8 @@ exports.setProduct = async ctx => {
         departureTime:ctx.request.body.departureTime,
         productInformation:ctx.request.body.productInformation,
         priceAdult:ctx.request.body.priceAdult,
-        childAdult:ctx.request.body.childAdult,
-        infantAdult:ctx.request.body.infantAdult        
+        priceChild:ctx.request.body.priceChild,
+        priceInfant:ctx.request.body.priceInfant        
       },
       {
         upsert:true,
@@ -251,8 +251,8 @@ exports.setPriceJogun = async ctx =>{
     isTotalPrice: Joi.boolean().required(),
     operator: Joi.string().required(),
     priceAdult:Joi.number().required(),
-    childAdult:Joi.number().required(),
-    infantAdult:Joi.number().required(),
+    priceChild:Joi.number().required(),
+    priceInfant:Joi.number().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -289,8 +289,8 @@ exports.setPriceJogun = async ctx =>{
         isTotalPrice: ctx.request.body.isTotalPrice,
         operator: ctx.request.body.operator,
         priceAdult: ctx.request.body.priceAdult,
-        childAdult: ctx.request.body.childAdult,
-        infantAdult: ctx.request.body.infantAdult
+        priceChild: ctx.request.body.priceChild,
+        priceInfant: ctx.request.body.priceInfant
       },
       {
         upsert:true,

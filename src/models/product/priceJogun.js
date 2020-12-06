@@ -25,9 +25,9 @@ let priceJogunSchema = new Schema({
     // 성인 상품가
     priceAdult:Number,
     // 유아 상품가
-    childAdult:Number,
+    priceChild:Number,
     // 영아 상품가
-    infantAdult:Number,
+    priceInfant:Number,
 }, { versionKey: false });
 
 
