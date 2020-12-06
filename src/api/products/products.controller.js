@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const Account = require('models/account/account');
 const ProductType = require('models/product/productType');
+const Product = require('models/product/product');
+
 Joi.objectId = require('joi-objectid')(Joi)
 const {
   Types: { ObjectId }
@@ -84,6 +86,106 @@ exports.setProductType = async ctx => {
 }
 
 exports.getProductTypeList = async ctx =>{
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+  let productType
+ try {
+    account = await Account.findOne({'profile.username':user.profile.username});
+    const accountClassification = await AccountClassification.findOne({
+      _id: account.profile.accountClassificationId
+    });
+    if(accountClassification&&accountClassification.name==='관리자'){
+      console.log('관리자 접속');
+      filter={
+      }
+    }else{
+      console.log('유저 접속');
+      filter={ 'userId': account._id}
+    }
+    productType = await ProductType.find(filter)
+  } catch (error) {
+    console.log(error);
+    ctx.status = 400;
+    response = {
+      result:2,
+      message:'실패'
+    };    
+  }
+  ctx.body=productType;
+}
+
+exports.setProduct = async ctx => {
+  const user = {profile:{username:'daeq'}};
+  const schema = Joi.object().keys({
+    _id:Joi.objectId(),
+    shipId: string().required(),
+    productTypeId:string().required(),
+    day:string().required(),
+    date: string().required(),
+    departureTime: string().required(),
+    productInformation: string().required(),
+    priceAdult:number().required(),
+    childAdult:number().required(),
+    infantAdult:number().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    console.log(result.error);
+    ctx.status = 400;
+    return;
+  }
+  let account;
+  let product;
+  let response = {
+    result:1,
+    message:'성공'
+  };
+  let filter ;
+  if(ctx.request.body._id){
+    filter={
+          _id:ObjectId(ctx.request.body._id)
+    }
+  }else{
+    filter={ 'day':'new 상품종목' }
+  }
+  try {
+    account = await Account.findOne({'profile.username':user.profile.username});
+    product = await Product.findOneAndUpdate(
+      {'$and':[{'userId':account._id}&&filter]},
+      {
+        userId:account._id,
+        shipId:ctx.request.body.shipId,
+        productTypeId:ctx.request.body.productTypeId,
+        day:ctx.request.body.day,
+        date:ctx.request.body.date,
+        departureTime:ctx.request.body.departureTime,
+        productInformation:ctx.request.body.productInformation,
+        priceAdult:ctx.request.body.priceAdult,
+        childAdult:ctx.request.body.childAdult,
+        infantAdult:ctx.request.body.infantAdult        
+      },
+      {
+        upsert:true,
+        new: true
+      }
+    )
+  } catch (error) {
+    console.log(error);
+    ctx.status = 400;
+    response = {
+      result:2,
+      message:'실패'
+    };
+  }
+  ctx.body = response;
+}
+
+exports.getProductList = async ctx =>{
   const user = {profile:{username:'daeq'}};
   // const { user } = ctx.request;  
   // if (!user) {
@@ -105,7 +207,7 @@ exports.getProductTypeList = async ctx =>{
       console.log('유저 접속');
       filter={ 'userId': account._id}
     }
-    productType = await ProductType.find(filter)
+    product = await Product.find(filter)
   } catch (error) {
     console.log(error);
     ctx.status = 400;
