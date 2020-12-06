@@ -20,6 +20,16 @@ let productTypeSchema = new Schema({
     refund:String,
     // 이용약관
     requirements:String,
+    // 미팅장소 명칭
+    meetingPlaceName: String, 
+    // 미팅장소 주소
+    meetingPlaceAddress1: String, 
+    // 미팅장소 우편번호
+    zip: String, 
+    // 미팅장소 lat
+    meetingPlaceLat: String, 
+    // 미팅장소 lng
+    meetingPlaceLng: String
 }, { versionKey: false });
 
 
