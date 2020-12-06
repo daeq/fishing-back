@@ -6,9 +6,9 @@ const productsCtrl = require('./products.controller');
 products.post('/setProductType', productsCtrl.setProductType);
 // 상폼종류 리스트 검색
 products.get('/getProductTypeList', productsCtrl.getProductTypeList);
-// 상품종류 등록
+// 상품 등록
 products.post('/setProduct', productsCtrl.setProduct);
-// 상폼종류 리스트 검색
+// 상폼 리스트 검색
 products.get('/getProductList', productsCtrl.getProductList);
 
 module.exports = products;
