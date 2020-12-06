@@ -9,7 +9,13 @@ const {
 } = require('mongoose');
 
 exports.setProductType = async ctx => {
-  const user = {profile:{username:'daeq'}};
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
   const schema = Joi.object().keys({
     _id:Joi.objectId(),
     shipId:Joi.string().required(),
