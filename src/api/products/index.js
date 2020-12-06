@@ -10,5 +10,8 @@ products.get('/getProductTypeList', productsCtrl.getProductTypeList);
 products.post('/setProduct', productsCtrl.setProduct);
 // 상폼 리스트 검색
 products.get('/getProductList', productsCtrl.getProductList);
-
+// 가격 조건 등록
+products.post('/setPriceJogun', productsCtrl.setPriceJogun);
+// 가격 조건 리스트
+products.post('/getPriceJogun', productsCtrl.getPriceJogun);
 module.exports = products;

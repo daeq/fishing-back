@@ -2,6 +2,7 @@ const Joi = require('joi');
 const Account = require('models/account/account');
 const ProductType = require('models/product/productType');
 const Product = require('models/product/product');
+const PriceJogun = require('models/product/priceJogun');
 
 Joi.objectId = require('joi-objectid')(Joi)
 const {
@@ -126,18 +127,24 @@ exports.getProductTypeList = async ctx =>{
 }
 
 exports.setProduct = async ctx => {
-  const user = {profile:{username:'daeq'}};
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
   const schema = Joi.object().keys({
     _id:Joi.objectId(),
-    shipId: string().required(),
-    productTypeId:string().required(),
-    day:string().required(),
-    date: string().required(),
-    departureTime: string().required(),
-    productInformation: string().required(),
-    priceAdult:number().required(),
-    childAdult:number().required(),
-    infantAdult:number().required(),
+    shipId: Joi.string().required(),
+    productTypeId:Joi.string().required(),
+    day:Joi.string().required(),
+    date: Joi.string().required(),
+    departureTime: Joi.string().required(),
+    productInformation: Joi.string().required(),
+    priceAdult:Joi.number().required(),
+    childAdult:Joi.number().required(),
+    infantAdult:Joi.number().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -192,13 +199,13 @@ exports.setProduct = async ctx => {
 }
 
 exports.getProductList = async ctx =>{
-  const user = {profile:{username:'daeq'}};
-  // const { user } = ctx.request;  
-  // if (!user) {
-  //   console.log('유저 없으');
-  //   ctx.status = 403; // Forbidden
-  //   return;
-  // }
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
   let productType
  try {
     account = await Account.findOne({'profile.username':user.profile.username});
@@ -223,4 +230,121 @@ exports.getProductList = async ctx =>{
     };    
   }
   ctx.body=productType;
+}
+
+exports.setPriceJogun = async ctx =>{
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+  const schema = Joi.object().keys({
+    _id:Joi.objectId(),
+    shipId: Joi.string().required(),
+    productTypeId:Joi.string().required(),
+    week:Joi.string().required(),
+    startDate: Joi.string().required(),
+    endDate: Joi.string().required(),
+    message: Joi.string().required(),
+    isTotalPrice: Joi.boolean().required(),
+    operator: Joi.string().required(),
+    priceAdult:Joi.number().required(),
+    childAdult:Joi.number().required(),
+    infantAdult:Joi.number().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    console.log(result.error);
+    ctx.status = 400;
+    return;
+  }
+  let account;
+  let priceJogun;
+  let response = {
+    result:1,
+    message:'성공'
+  };
+  let filter ;
+  if(ctx.request.body._id){
+    filter={
+          _id:ObjectId(ctx.request.body._id)
+    }
+  }else{
+    filter={  }
+  }
+  try {
+    account = await Account.findOne({'profile.username':user.profile.username});
+    priceJogun = await PriceJogun.findOneAndUpdate(
+      {'$and':[{'userId':account._id}&&filter]},
+      {
+        userId:account._id,
+        shipId: ctx.request.body.shipId,
+        productTypeId: ctx.request.body.productTypeId,
+        week: ctx.request.body.week,
+        startDate: ctx.request.body.startDate,
+        endDate: ctx.request.body.endDate,
+        message: ctx.request.body.message,
+        isTotalPrice: ctx.request.body.isTotalPrice,
+        operator: ctx.request.body.operator,
+        priceAdult: ctx.request.body.priceAdult,
+        childAdult: ctx.request.body.childAdult,
+        infantAdult: ctx.request.body.infantAdult
+      },
+      {
+        upsert:true,
+        new: true
+      }
+    )
+  } catch (error) {
+    console.log(error);
+    ctx.status = 400;
+    response = {
+      result:2,
+      message:'실패'
+    };
+  }
+  ctx.body = response;
+
+}
+
+exports.getPriceJogun = async ctx =>{  
+  // const user = {profile:{username:'daeq'}};
+  const { user } = ctx.request;  
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+  const schema = Joi.object().keys({
+    _id:Joi.objectId(),
+    productTypeId: Joi.objectId().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    console.log(result.error);
+    ctx.status = 400;
+    return;
+  }
+  let priceJogun
+ try {
+    account = await Account.findOne({'profile.username':user.profile.username});
+    const accountClassification = await AccountClassification.findOne({
+      _id: account.profile.accountClassificationId
+    });
+    if(accountClassification&&accountClassification.name==='관리자'){
+      console.log('관리자 접속');
+      filter={
+      }
+    }else{
+      console.log('유저 접속');
+      filter={ 'userId': account._id}
+    }
+    product = await PriceJogun.find({'$and':[{productTypeId:ctx.request.body.productTypeId}&&filter]})
+  } catch (error) {
+    console.log(error);
+    ctx.status = 400;
+  }
+  ctx.body=priceJogun;
 }
