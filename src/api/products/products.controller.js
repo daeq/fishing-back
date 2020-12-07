@@ -246,8 +246,8 @@ exports.setPriceJogun = async ctx =>{
     shipId: Joi.string().required(),
     productTypeId:Joi.string().required(),
     week:Joi.string().required(),
-    startDate: Joi.date().required(),
-    endDate: Joi.date().required(),
+    startDate: Joi.string().required(),
+    endDate: Joi.string().required(),
     message: Joi.string().required(),
     priceCommonIsUse: Joi.boolean().required(),
     operator: Joi.string().required(),
@@ -290,8 +290,14 @@ exports.setPriceJogun = async ctx =>{
         shipId: ctx.request.body.shipId,
         productTypeId: ctx.request.body.productTypeId,
         week: ctx.request.body.week,
-        startDate: ctx.request.body.startDate,
-        endDate: ctx.request.body.endDate,
+        startDate: new Date(
+          new Date(ctx.request.body.startDate).getTime() -
+            new Date(ctx.request.body.startDate).getTimezoneOffset() * 60000
+        ),
+        endDate: new Date(
+          new Date(ctx.request.body.endDate).getTime() -
+            new Date(ctx.request.body.endDate).getTimezoneOffset() * 60000
+        ),
         message: ctx.request.body.message,
         priceCommonIsUse: ctx.request.body.priceCommonIsUse,
         operator: ctx.request.body.operator,
@@ -406,7 +412,9 @@ exports.setPriceSet = async (ctx) =>{
   // 업데이트할 날짜 수 연산
   const diff = Math.ceil((endDate - startDate) / (24 * 60 * 60 * 1000));
   console.log({diff, startDate, endDate});
-  await PriceJogun.find()
+  await PriceJogun.find({$and:[
+    // {$gte:{}}
+  ]})
   let num;
   while (num<=diff) {
 
