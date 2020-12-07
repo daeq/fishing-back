@@ -360,7 +360,7 @@ exports.getPriceJogun = async ctx =>{
       console.log('유저 접속');
       filter={ 'userId': account._id}
     }
-    product = await PriceJogun.find({'$and':[{productTypeId:ObjectId(ctx.request.body.productTypeId)}&&filter]})
+    priceJogun = await PriceJogun.find({'$and':[{productTypeId:ObjectId(ctx.request.body.productTypeId)}&&filter]})
   } catch (error) {
     console.log(error);
     ctx.status = 400;
@@ -425,9 +425,7 @@ exports.setPriceSet = async (ctx) =>{
     const result = priceJoguns.filter(priceJogun=>{
       return priceJogun.startDate<=targetDate&&priceJogun.endDate>=targetDate
     }).reduce(async (a, current) => {
-      return {
-        no:1
-      }
+      return 
     });
     console.log({result});
     num++;
