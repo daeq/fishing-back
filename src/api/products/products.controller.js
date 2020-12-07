@@ -248,7 +248,7 @@ exports.setPriceJogun = async ctx =>{
     startDate: Joi.string().required(),
     endDate: Joi.string().required(),
     message: Joi.string().required(),
-    isTotalPrice: Joi.boolean().required(),
+    priceCommonIsUse: Joi.boolean().required(),
     operator: Joi.string().required(),
     priceAdult:Joi.number().required(),
     priceChild:Joi.number().required(),
