@@ -369,27 +369,20 @@ exports.getPriceJogun = async ctx =>{
 }
 
 exports.setPriceSet = async (ctx) =>{
-  const user = {profile:{username:'hklee'}};
-  // const { user } = ctx.request;
-  // if (!user) {
-  //   console.log('유저 없으');
-  //   ctx.status = 403; // Forbidden
-  //   return;
-  // }
-  const { productTypeId } = ctx.request.body;
-  if(ctx.request.body._id){
-    filter={
-          productTypeId:ObjectId(productTypeId)
-    }
-  }else{
-    filter={ 'title':'new 상품종목' }
+  // const user = {profile:{username:'hklee'}};
+  const { user } = ctx.request;
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
   }
+  const { productTypeId } = ctx.request.body;
   let date;
   try {
     // 최소 날짜 확인
    date = await PriceJogun.aggregate([{
       $match :{
-        // productTypeId:ObjectId(productTypeId)
+        productTypeId:ObjectId(productTypeId)
       }
     },{
         $group:
@@ -424,14 +417,44 @@ exports.setPriceSet = async (ctx) =>{
     targetDate.setDate(targetDate.getDate() + num);
     const result = priceJoguns.filter(priceJogun=>{
       return priceJogun.startDate<=targetDate&&priceJogun.endDate>=targetDate
-    }).reduce(async (a, current) => {
-      return 
-    });
-    console.log({result});
+    }).reduce((a, current) => {
+      return {userId:current.userId,
+        shipId: ObjectId(current.shipId),
+        productTypeId:ObjectId(current.productTypeId),
+        date: targetDate,
+        priceCommonIsUse:current.priceCommonIsUse,
+        priceAdult:ChangeFormModules.calculateByOperator(a.priceAdult, current.priceAdult, current.operator),
+        priceChild:ChangeFormModules.calculateByOperator(a.priceChild, current.priceChild, current.operator),
+        priceInfant:ChangeFormModules.calculateByOperator(a.priceInfant, current.priceInfant, current.operator),
+        priceAdultIsUse:  current.priceAdultIsUse,
+        priceChildIsUse:  current.priceChildIsUse,
+        priceInfantIsUse: current.priceInfantIsUse,}
+    },{});
+    await Product.findOneAndUpdate({date:targetDate},result,{upsert:true,new:true})
     num++;
+  }
+  if(num>diff){
+    ctx.body='연산 종료'
   }
 } catch (error) {
   console.log(error);
 }
   
+}
+
+exports.getPriceList = async (ctx) =>{
+  // const user = {profile:{username:'hklee'}};
+  const { user } = ctx.request;
+  if (!user) {
+    console.log('유저 없으');
+    ctx.status = 403; // Forbidden
+    return;
+  }
+  const { productTypeId } = ctx.request.body;
+  try {
+    ctx.body = await Product.find({productTypeId:ObjectId(productTypeId)})    
+  } catch (error) {
+    console.log(error);
+    ctx.status=403;
+  }
 }

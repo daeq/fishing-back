@@ -217,10 +217,12 @@ exports.Exchange = type => {
     : type === '일본 JPY (100엔)' && 11;
 };
 exports.calculateByOperator = (a, b, o) => {
-  if (o === 'MINUS' || o === 'minus') {
-    return b - a;
+  if(a===undefined){
+    return b;
+  }else if (o === 'MINUS' || o === 'minus') {
+    return b - a?a:0;
   } else {
-    return b + a;
+    return b + a?a:0;
   }
 };
 exports.caculateFee = (fee, elem) => {

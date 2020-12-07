@@ -10,16 +10,8 @@ let productSchema = new Schema({
     shipId: ObjectId,
     // 상품종류 id
     productTypeId:ObjectId,
-    // 출발요일
-    // day:String,
     // 출발일
     date: Date,
-    // 출항시간
-    // departureTime: String,
-    // 입항시간
-    // arrivalTime: String,
-    // 상품정보
-    // productInformation: String,
     
     // 대소공통 여부
     priceCommonIsUse:Boolean,
@@ -35,6 +27,15 @@ let productSchema = new Schema({
     priceChildIsUse:  Boolean,
     // 유아요금 사용유무
     priceInfantIsUse: Boolean,
+    
+    // 출발요일
+    // day:String,
+    // 출항시간
+    // departureTime: String,
+    // 입항시간
+    // arrivalTime: String,
+    // 상품정보
+    // productInformation: String,
 }, { versionKey: false });
 
 
