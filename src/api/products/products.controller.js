@@ -256,9 +256,9 @@ exports.setPriceJogun = async ctx =>{
     priceAdultIsUse: Joi.boolean().required(),
     priceChildIsUse: Joi.boolean().required(),
     priceInfantIsUse: Joi.boolean().required(),
-    priceAdultMessage: Joi.string(),
-    priceChildMessage: Joi.string(),
-    priceInfantMessage: Joi.string()
+    priceAdultMessage: Joi.string().allow('').optional(),
+    priceChildMessage: Joi.string().allow('').optional(),
+    priceInfantMessage: Joi.string().allow('').optional()
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
