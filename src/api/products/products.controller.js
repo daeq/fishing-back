@@ -3,6 +3,7 @@ const Account = require('models/account/account');
 const ProductType = require('models/product/productType');
 const Product = require('models/product/product');
 const PriceJogun = require('models/product/priceJogun');
+const ChangeFormModules = require('lib/changeFormModules');
 
 Joi.objectId = require('joi-objectid')(Joi)
 const {
@@ -245,8 +246,8 @@ exports.setPriceJogun = async ctx =>{
     shipId: Joi.string().required(),
     productTypeId:Joi.string().required(),
     week:Joi.string().required(),
-    startDate: Joi.string().required(),
-    endDate: Joi.string().required(),
+    startDate: Joi.date().required(),
+    endDate: Joi.date().required(),
     message: Joi.string().required(),
     priceCommonIsUse: Joi.boolean().required(),
     operator: Joi.string().required(),
@@ -361,7 +362,7 @@ exports.getPriceJogun = async ctx =>{
   ctx.body=priceJogun;
 }
 
-exports.setPriceSet = async ctx =>{
+exports.setPriceSet = async (ctx) =>{
   const user = {profile:{username:'hklee'}};
   // const { user } = ctx.request;
   // if (!user) {
@@ -379,7 +380,6 @@ exports.setPriceSet = async ctx =>{
   }
   let date;
   try {
-
     // 최소 날짜 확인
    date = await PriceJogun.aggregate([{
       $match :{
@@ -392,10 +392,28 @@ exports.setPriceSet = async ctx =>{
           startDate: { $min: "$startDate" },
           endDate: { $max: '$endDate' }
         }
-      }]);
-  } catch (error) {
-    console.log(error);
+  }])
+
+  let from = typeof date[0].startDate == "string"&& date[0].startDate.split("-")
+  let startDate = new Date(from[0], from[1]-1, from[2]);  
+  let to = typeof date[0].endDate === "string"&& date[0].endDate.split('-')
+  let endDate = new Date(to[0], to[1]-1, to[2]);
+
+  // 업데이트 날짜를 기준으로 최소날짜 확인
+  const today = ChangeFormModules.today();
+  startDate = startDate.getTime() < today.getTime() ? today : startDate;
+
+  // 업데이트할 날짜 수 연산
+  const diff = Math.ceil((endDate - startDate) / (24 * 60 * 60 * 1000));
+  console.log({diff, startDate, endDate});
+  await PriceJogun.find()
+  let num;
+  while (num<=diff) {
+
+    num++;
   }
-  console.log(date);
-  ctx.body=date
+} catch (error) {
+  console.log(error);
+}
+  
 }

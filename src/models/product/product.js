@@ -11,15 +11,15 @@ let productSchema = new Schema({
     // 상품종류 id
     productTypeId:ObjectId,
     // 출발요일
-    day:String,
+    // day:String,
     // 출발일
-    date: String,
+    date: Date,
     // 출항시간
-    departureTime: String,
+    // departureTime: String,
     // 입항시간
-    arrivalTime: String,
+    // arrivalTime: String,
     // 상품정보
-    productInformation: String,
+    // productInformation: String,
     // 성인 상품가
     priceAdult:Number,
     // 유아 상품가
