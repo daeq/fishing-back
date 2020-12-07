@@ -20,12 +20,21 @@ let productSchema = new Schema({
     // arrivalTime: String,
     // 상품정보
     // productInformation: String,
+    
+    // 대소공통 여부
+    priceCommonIsUse:Boolean,
     // 성인 상품가
     priceAdult:Number,
     // 유아 상품가
     priceChild:Number,
     // 영아 상품가
     priceInfant:Number,
+     // 성인요금 사용유무
+    priceAdultIsUse:  Boolean,
+     // 아동요금 사용유무
+    priceChildIsUse:  Boolean,
+    // 유아요금 사용유무
+    priceInfantIsUse: Boolean,
 }, { versionKey: false });
 
 

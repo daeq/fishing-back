@@ -346,7 +346,7 @@ exports.getPriceJogun = async ctx =>{
     ctx.status = 400;
     return;
   }
-  let priceJogun
+  let priceJogun;
  try {
     account = await Account.findOne({'profile.username':user.profile.username});
     const accountClassification = await AccountClassification.findOne({
@@ -360,7 +360,7 @@ exports.getPriceJogun = async ctx =>{
       console.log('유저 접속');
       filter={ 'userId': account._id}
     }
-    product = await PriceJogun.find({'$and':[{productTypeId:ctx.request.body.productTypeId}&&filter]})
+    product = await PriceJogun.find({'$and':[{productTypeId:ObjectId(ctx.request.body.productTypeId)}&&filter]})
   } catch (error) {
     console.log(error);
     ctx.status = 400;
@@ -400,10 +400,10 @@ exports.setPriceSet = async (ctx) =>{
         }
   }])
 
-  let from = typeof date[0].startDate == "string"&& date[0].startDate.split("-")
-  let startDate = new Date(from[0], from[1]-1, from[2]);  
-  let to = typeof date[0].endDate === "string"&& date[0].endDate.split('-')
-  let endDate = new Date(to[0], to[1]-1, to[2]);
+  let {startDate,endDate} = date[0];  
+  // let from = typeof date[0].startDate == "string"&& date[0].startDate.split("-")
+  // let to = typeof date[0].endDate === "string"&& date[0].endDate.split('-')
+  // let endDate = new Date(to[0], to[1]-1, to[2]);
 
   // 업데이트 날짜를 기준으로 최소날짜 확인
   const today = ChangeFormModules.today();
@@ -411,13 +411,35 @@ exports.setPriceSet = async (ctx) =>{
 
   // 업데이트할 날짜 수 연산
   const diff = Math.ceil((endDate - startDate) / (24 * 60 * 60 * 1000));
-  console.log({diff, startDate, endDate});
-  await PriceJogun.find({$and:[
-    // {$gte:{}}
+  let priceJoguns=await PriceJogun.find({$and:[
+    { "startDate" : 
+            { "$gte" : startDate}
+    },{ "endDate" : 
+            {  "$lte" : endDate}
+      }
   ]})
-  let num;
+  let num=0;
   while (num<=diff) {
-
+    let targetDate = new Date(startDate);
+    targetDate.setDate(targetDate.getDate() + num);
+    const result = priceJoguns.filter(priceJogun=>{
+      return priceJogun.startDate<=targetDate&&priceJogun.endDate>=targetDate
+    }).reduce(async (a, current) => {
+      return {
+        userId:current.userId,
+        shipId: current.shipId,
+        productTypeId:current.productTypeId,
+        date: current.date,
+        priceCommonIsUse:current.priceCommonIsUse,
+        priceAdult:ChangeFormModules.calculateByOperator(a.priceAdult, current.priceAdult, current.operator),
+        priceChild:ChangeFormModules.calculateByOperator(a.priceChild, current.priceChild, current.operator),
+        priceInfant:ChangeFormModules.calculateByOperator(a.priceInfant, current.priceInfant, current.operator),
+        priceAdultIsUse:  current.priceAdultIsUse,
+        priceChildIsUse:  current.priceChildIsUse,
+        priceInfantIsUse: current.priceInfantIsUse,
+      }
+    });
+    console.log({result});
     num++;
   }
 } catch (error) {
