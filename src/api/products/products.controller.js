@@ -289,7 +289,7 @@ exports.setPriceJogun = async ctx =>{
         startDate: ctx.request.body.startDate,
         endDate: ctx.request.body.endDate,
         message: ctx.request.body.message,
-        isTotalPrice: ctx.request.body.isTotalPrice,
+        priceCommonIsUse: ctx.request.body.priceCommonIsUse,
         operator: ctx.request.body.operator,
         priceAdult: ctx.request.body.priceAdult,
         priceChild: ctx.request.body.priceChild,
