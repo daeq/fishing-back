@@ -255,7 +255,10 @@ exports.setPriceJogun = async ctx =>{
     priceInfant:Joi.number().required(),
     priceAdultIsUse: Joi.boolean().required(),
     priceChildIsUse: Joi.boolean().required(),
-    priceInfantIsUse: Joi.boolean().required()
+    priceInfantIsUse: Joi.boolean().required(),
+    priceAdultMessage: Joi.string().required(),
+    priceChildMessage: Joi.string().required(),
+    priceInfantMessage: Joi.string().required()
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -296,7 +299,10 @@ exports.setPriceJogun = async ctx =>{
         priceInfant: ctx.request.body.priceInfant,
         priceAdultIsUse: ctx.request.body.priceAdultIsUse,
         priceChildIsUse: ctx.request.body.priceChildIsUse,
-        priceInfantIsUse: ctx.request.body.priceInfantIsUse
+        priceInfantIsUse: ctx.request.body.priceInfantIsUse,
+        priceAdultMessage: ctx.request.body.priceAdultMessage,
+        priceChildMessage: ctx.request.body.priceChildMessage,
+        priceInfantMessage: ctx.request.body.priceInfantMessage
       },
       {
         upsert:true,

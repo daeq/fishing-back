@@ -19,7 +19,7 @@ let priceJogunSchema = new Schema({
     // 비고
     message:String,
     // 대소공통 여부
-    isTotalPrice:Boolean,
+    priceCommonIsUse:Boolean,
     // 연산자
     operator:String,
     // 성인 상품가
@@ -34,6 +34,12 @@ let priceJogunSchema = new Schema({
     priceChildIsUse:  Boolean,
     // 유아요금 사용유무
     priceInfantIsUse: Boolean,
+     // 성인요금 타이틀
+    priceAdultMessage: String,
+    // 아동요금 타이틀
+    priceChildMessage: String,
+      // 유아요금 타이틀
+    priceInfantMessage: String,
 }, { versionKey: false });
 
 
