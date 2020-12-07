@@ -28,6 +28,12 @@ let priceJogunSchema = new Schema({
     priceChild:Number,
     // 영아 상품가
     priceInfant:Number,
+     // 성인요금 사용유무
+    priceAdultIsUse:  Boolean,
+     // 아동요금 사용유무
+    priceChildIsUse:  Boolean,
+    // 유아요금 사용유무
+    priceInfantIsUse: Boolean,
 }, { versionKey: false });
 
 

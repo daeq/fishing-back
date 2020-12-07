@@ -253,6 +253,9 @@ exports.setPriceJogun = async ctx =>{
     priceAdult:Joi.number().required(),
     priceChild:Joi.number().required(),
     priceInfant:Joi.number().required(),
+    priceAdultIsUse: Joi.boolean().required(),
+    priceChildIsUse: Joi.boolean().required(),
+    priceInfantIsUse: Joi.boolean().required()
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -290,7 +293,10 @@ exports.setPriceJogun = async ctx =>{
         operator: ctx.request.body.operator,
         priceAdult: ctx.request.body.priceAdult,
         priceChild: ctx.request.body.priceChild,
-        priceInfant: ctx.request.body.priceInfant
+        priceInfant: ctx.request.body.priceInfant,
+        priceAdultIsUse: ctx.request.body.priceAdultIsUse,
+        priceChildIsUse: ctx.request.body.priceChildIsUse,
+        priceInfantIsUse: ctx.request.body.priceInfantIsUse
       },
       {
         upsert:true,
@@ -347,4 +353,43 @@ exports.getPriceJogun = async ctx =>{
     ctx.status = 400;
   }
   ctx.body=priceJogun;
+}
+
+exports.setPriceSet = async ctx =>{
+  const user = {profile:{username:'hklee'}};
+  // const { user } = ctx.request;
+  // if (!user) {
+  //   console.log('유저 없으');
+  //   ctx.status = 403; // Forbidden
+  //   return;
+  // }
+  const { productTypeId } = ctx.request.body;
+  if(ctx.request.body._id){
+    filter={
+          productTypeId:ObjectId(productTypeId)
+    }
+  }else{
+    filter={ 'title':'new 상품종목' }
+  }
+  let date;
+  try {
+
+    // 최소 날짜 확인
+   date = await PriceJogun.aggregate([{
+      $match :{
+        // productTypeId:ObjectId(productTypeId)
+      }
+    },{
+        $group:
+        {
+          _id: "$_id",
+          startDate: { $min: "$startDate" },
+          endDate: { $max: '$endDate' }
+        }
+      }]);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(date);
+  ctx.body=date
 }

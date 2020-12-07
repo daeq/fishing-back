@@ -14,4 +14,7 @@ products.get('/getProductList', productsCtrl.getProductList);
 products.post('/setPriceJogun', productsCtrl.setPriceJogun);
 // 가격 조건 리스트
 products.post('/getPriceJogun', productsCtrl.getPriceJogun);
+// 가격 셋
+products.post('/setPriceSet', productsCtrl.setPriceSet);
+
 module.exports = products;
