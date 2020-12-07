@@ -338,7 +338,7 @@ exports.getPriceJogun = async ctx =>{
   }
   const schema = Joi.object().keys({
     _id:Joi.objectId(),
-    productTypeId: Joi.objectId().required(),
+    productTypeId: Joi.string().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -426,17 +426,7 @@ exports.setPriceSet = async (ctx) =>{
       return priceJogun.startDate<=targetDate&&priceJogun.endDate>=targetDate
     }).reduce(async (a, current) => {
       return {
-        userId:current.userId,
-        shipId: current.shipId,
-        productTypeId:current.productTypeId,
-        date: current.date,
-        priceCommonIsUse:current.priceCommonIsUse,
-        priceAdult:ChangeFormModules.calculateByOperator(a.priceAdult, current.priceAdult, current.operator),
-        priceChild:ChangeFormModules.calculateByOperator(a.priceChild, current.priceChild, current.operator),
-        priceInfant:ChangeFormModules.calculateByOperator(a.priceInfant, current.priceInfant, current.operator),
-        priceAdultIsUse:  current.priceAdultIsUse,
-        priceChildIsUse:  current.priceChildIsUse,
-        priceInfantIsUse: current.priceInfantIsUse,
+        no:1
       }
     });
     console.log({result});

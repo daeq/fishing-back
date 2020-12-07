@@ -646,3 +646,5 @@ exports.penaltyCalulator = (date, totalPrice, term) => {
     penaltyPrice: penaltyPrice
   };
 };
+
+
