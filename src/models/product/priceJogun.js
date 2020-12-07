@@ -13,11 +13,11 @@ let priceJogunSchema = new Schema({
     // 출발요일
     week:String,
     // 출발일
-    startDate: String,
+    startDate: Date,
     // 종료일
     endDate: Date,
     // 비고
-    message:Date,
+    message:String,
     // 대소공통 여부
     priceCommonIsUse:Boolean,
     // 연산자
