@@ -275,17 +275,23 @@ exports.setPriceJogun = async ctx =>{
     message:'성공'
   };
   let filter ;
-  if(ctx.request.body._id){
-    filter={
-          _id:ObjectId(ctx.request.body._id)
-    }
-  }else{
-    filter={  }
-  }
   try {
     account = await Account.findOne({'profile.username':user.profile.username});
+    if(ctx.request.body._id){
+      filter=[
+        {'userId':account._id}
+          &&{ productTypeId:ObjectId(ctx.request.body.productTypeId) }
+          &&{ _id:ObjectId(ctx.request.body._id)}
+      ]
+    }else{
+      filter=[
+          {'userId':account._id}
+          &&{ productTypeId:ObjectId(ctx.request.body.productTypeId) }
+          &&{operator:'new'}
+        ]
+    }
     priceJogun = await PriceJogun.findOneAndUpdate(
-      {'$and':[{'userId':account._id}&&filter]},
+      {'$and':filter },
       {
         userId:account._id,
         shipId: ctx.request.body.shipId,
