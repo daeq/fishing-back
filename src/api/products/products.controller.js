@@ -243,6 +243,7 @@ exports.setPriceJogun = async ctx =>{
   }
   const schema = Joi.object().keys({
     _id:Joi.objectId(),
+    userId:Joi.objectId(),
     shipId: Joi.string().required(),
     productTypeId:Joi.string().required(),
     week:Joi.string().required(),
@@ -355,12 +356,13 @@ exports.getPriceJogun = async ctx =>{
     if(accountClassification&&accountClassification.name==='관리자'){
       console.log('관리자 접속');
       filter={
+        
       }
     }else{
       console.log('유저 접속');
       filter={ 'userId': account._id}
     }
-    priceJogun = await PriceJogun.find({'$and':[{productTypeId:ObjectId(ctx.request.body.productTypeId)}&&filter]})
+    priceJogun = await PriceJogun.find({productTypeId:ObjectId(ctx.request.body.productTypeId)})
   } catch (error) {
     console.log(error);
     ctx.status = 400;
