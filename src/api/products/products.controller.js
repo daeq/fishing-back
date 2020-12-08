@@ -37,10 +37,14 @@ exports.setProductType = async ctx => {
     meetingPlaceLat: Joi.string().required(),
     // 미팅장소 lng
     meetingPlaceLng: Joi.string().required(),    
-    // 출항시간
-    departureTime: Joi.string().required(),
-    // 입항시간
-    arrivalTime: Joi.string().required(),
+    // 출항시간(시)
+    departureTimeH: Joi.string().required(),
+    // 출항시간(분)
+    departureTimeM: Joi.string().required(),
+    // 입항시간(시)
+    arrivalTimeH: Joi.string().required(),
+    // 입항시간(분)
+    arrivalTimeM: Joi.string().required(),
   });
   const result = schema.validate(ctx.request.body);
   if (result.error) {
@@ -80,8 +84,10 @@ exports.setProductType = async ctx => {
         zip:ctx.request.body.zip,
         meetingPlaceLat:ctx.request.body.meetingPlaceLat,
         meetingPlaceLng:ctx.request.body.meetingPlaceLng,
-        departureTime:ctx.request.body.departureTime,
-        arrivalTime:ctx.request.body.arrivalTime
+        departureTimeH:ctx.request.body.departureTimeH,
+        departureTimeM:ctx.request.body.departureTimeM,
+        arrivalTimeH:ctx.request.body.arrivalTimeH,
+        arrivalTimeM:ctx.request.body.arrivalTimeM
       },
       {
         upsert:true,
