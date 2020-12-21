@@ -30,10 +30,6 @@ let productSchema = new Schema({
     
     // 출발요일
     // day:String,
-    // 출항시간
-    // departureTime: String,
-    // 입항시간
-    // arrivalTime: String,
     // 상품정보
     // productInformation: String,
 }, { versionKey: false });

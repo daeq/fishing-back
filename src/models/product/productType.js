@@ -29,7 +29,11 @@ let productTypeSchema = new Schema({
     // 미팅장소 lat
     meetingPlaceLat: String, 
     // 미팅장소 lng
-    meetingPlaceLng: String
+    meetingPlaceLng: String,
+    // 출항시간
+    departureTime: String,
+    // 입항시간
+    arrivalTime: String,
 }, { versionKey: false });
 
 
