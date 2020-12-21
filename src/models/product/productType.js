@@ -30,10 +30,14 @@ let productTypeSchema = new Schema({
     meetingPlaceLat: String, 
     // 미팅장소 lng
     meetingPlaceLng: String,
-    // 출항시간
-    departureTime: String,
-    // 입항시간
-    arrivalTime: String,
+    // 출항시간(시)
+    departureTimeH: String,
+    // 출항시간(분)
+    departureTimeM: String,
+    // 입항시간(시)
+    arrivalTimeH: String,
+    // 입항시간(분)
+    arrivalTimeM: String,
 }, { versionKey: false });
 
 
