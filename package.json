@@ -24,7 +24,7 @@
     "path": "^0.12.7"
   },
   "scripts": {
-    "start": "cross-env NODE_PATH=src node src/index.js",
+    "start": "NODE_PATH=src node src/index.js",
     "start:dev": "cross-env NODE_PATH=src nodemon --watch src/ src/index.js"
   }
 }
